@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <script src="load_calendar.js"></script>
+    
+    <title>Calendar</title>
+</head>
+<body>
+    <div class="sidebarflex">
+        <button id="createbtn">Create</button>
+        <div class="miniheadingflex">
+            <h1 class="minimonthheading" id="minimonthheading">June 2024</h1>
+            <div>
+                <button id="minimonthbtn1">
+                    <img src="images/arr.png" alt="arrow">
+                </button>
+                <button id="minimonthbtn2">
+                    <img src="images/arr.png" alt="arrow">
+                </button>
+            </div>
+        </div>
+        <table id="minicalendar">
+            <thead>
+                <tr>
+                    <th>Sun</th>
+                    <th>Mon</th>
+                    <th>Tue</th>
+                    <th>Wed</th>
+                    <th>Thu</th>
+                    <th>Fri</th>
+                    <th>Sat</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div class="mainflex">
+        <div class="headingflex">
+            <button id="monthbtn1">
+                <img src="images/arr.png" alt="arrow">
+            </button>
+            <button id="monthbtn2">
+                <img src="images/arr.png" alt="arrow">
+            </button>
+            <h1 class="monthheading" id="monthheading">June 2024</h1>
+        </div>
+        <table id="calendar">
+            <thead>
+                <tr>
+                    <th>Sun</th>
+                    <th>Mon</th>
+                    <th>Tue</th>
+                    <th>Wed</th>
+                    <th>Thu</th>
+                    <th>Fri</th>
+                    <th>Sat</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    
+    <script src="refresh_calendar.js"></script>
+    <script src="refresh_minicalendar.js"></script>
+</body>
+</html>
