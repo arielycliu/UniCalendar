@@ -13,6 +13,7 @@ class Task(db.Model):
     type: Mapped[str] = mapped_column(String(20), nullable=False)  # indicate whether assignment or test type
     tags: Mapped[List[str]] = mapped_column(ARRAY(String))  # subtypes enable finer task categories e.g, midterm, survey
     grade_weight: Mapped[int] = mapped_column(Integer)  # weight of task e.g, 5%
+    grade_achieved: Mapped[int] = mapped_column(Integer)
     course_code: Mapped[str] = mapped_column(String(50))
     status: Mapped[str] = mapped_column(String(20), nullable=False)  # status of task e.g, todo, doing, done, blocked
     time_start: Optional[datetime.datetime] = mapped_column(DateTime)
