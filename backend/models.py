@@ -18,3 +18,14 @@ class Task(db.Model):
     time_start: Optional[datetime.datetime] = mapped_column(DateTime)
     time_end: Optional[datetime.datetime] = mapped_column(DateTime)  # must end after start date
     subtask_ids: Mapped[List[int]] = mapped_column(ARRAY(Integer))  # one task can link to multiple subtasks
+
+class SubTask(db.Model):
+    __tablename__ = "subtask"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(String(4096))
+    # type must be identical to type of its task parent
+    status: Mapped[str] = mapped_column(String(20), nullable=False)  # status is independent of its parents
+    time_start: Optional[datetime.datetime] = mapped_column(DateTime)
+    time_end: Optional[datetime.datetime] = mapped_column(DateTime)
