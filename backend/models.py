@@ -16,8 +16,8 @@ class Task(db.Model):
     grade_achieved: Mapped[int] = mapped_column(Integer)
     course_code: Mapped[str] = mapped_column(String(50))
     status: Mapped[str] = mapped_column(String(20), nullable=False)  # status of task e.g, todo, doing, done, blocked
-    time_start: Optional[datetime.datetime] = mapped_column(DateTime)
-    time_end: Optional[datetime.datetime] = mapped_column(DateTime)  # must end after start date
+    time_start: Mapped[datetime.datetime] = mapped_column(DateTime)
+    time_end: Mapped[datetime.datetime] = mapped_column(DateTime)  # must end after start date
     subtask_ids: Mapped[List[int]] = mapped_column(ARRAY(Integer))  # one task can link to multiple subtasks
 
 class SubTask(db.Model):
@@ -28,5 +28,5 @@ class SubTask(db.Model):
     description: Mapped[Optional[str]] = mapped_column(String(4096))
     # type must be identical to type of its task parent
     status: Mapped[str] = mapped_column(String(20), nullable=False)  # status is independent of its parents
-    time_start: Optional[datetime.datetime] = mapped_column(DateTime)
-    time_end: Optional[datetime.datetime] = mapped_column(DateTime)
+    time_start: Mapped[datetime.datetime] = mapped_column(DateTime)
+    time_end: Mapped[datetime.datetime] = mapped_column(DateTime)
