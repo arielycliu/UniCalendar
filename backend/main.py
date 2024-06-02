@@ -1,9 +1,9 @@
 from config import app, db
 from flask import request, jsonify
-from models import Task, SubTask
+from models import Task, Subtask
 
 # CREATE
-@app.route("/create_task", methods=["POST"])
+@app.route("/create/task", methods=["POST"])
 def create_task():
     name = request.json.get("name")
     description = request.json.get("description")
@@ -15,15 +15,17 @@ def create_task():
     status = request.json.get("status")
     time_start = request.json.get("time_start")
     time_end = request.json.get("time_end")
-    subtask_ids = request.json.get("subtask_ids")
 
     # Checks
     if not name or not type:
         return (jsonify({"message": "You must indicate name of task and task type"}), 400)
     if not status:
         status = "TODO"
+    if type not in ["Assignment", "Test"]:
+        return (jsonify({"message": "Invalid task type"}), 400)
 
-    new_task = Task(name=name, description=description, type=type, tags=tags, grade_weight=grade_weight, grade_achieved=grade_achieved, course_code=course_code, status=status, time_start=time_start, time_end=time_end, subtask_ids=subtask_ids)
+    new_task = Task(name=name, description=description, type=type, grade_weight=grade_weight, grade_achieved=grade_achieved, course_code=course_code, status=status, time_start=time_start, time_end=time_end,
+    tags=tags)
     try:
         db.session.add(new_task)
         db.session.commit()
