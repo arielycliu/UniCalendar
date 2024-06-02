@@ -21,7 +21,7 @@ class Task(db.Model):
     grade_achieved: Mapped[float] = mapped_column(Float, nullable=True)
     course_code: Mapped[str] = mapped_column(String(50), nullable=True)
     status: Mapped[str] = mapped_column(String(20), default='TODO')  # status of task e.g, todo, doing, done, blocked
-    time_start: Mapped[str] = mapped_column(String(50), default=str(datetime.datetime.now()))
+    time_start: Mapped[str] = mapped_column(String(50), nullable=True)
     time_end: Mapped[str] = mapped_column(String(50), nullable=True)  # must end after start date
     tags = db.relationship('Tag', secondary=task_tags, back_populates='tasks')  # subtypes enable finer task categories e.g, midterm, survey
 
@@ -48,7 +48,7 @@ class Subtask(db.Model):
     description: Mapped[Optional[str]] = mapped_column(String(4096), nullable=True)
     # type must be identical to type of its task parent
     status: Mapped[str] = mapped_column(String(20), default='TODO')  # status is independent of its parents
-    time_start: Mapped[str] = mapped_column(String(50), default=str(datetime.datetime.now()))
+    time_start: Mapped[str] = mapped_column(String(50), nullable=True)
     time_end: Mapped[str] = mapped_column(String(50), nullable=True)
     parent_task_id: Mapped[int] = mapped_column(Integer, nullable=False)  # one task can link to multiple subtasks
 
