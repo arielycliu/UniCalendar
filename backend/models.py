@@ -35,7 +35,7 @@ class Subtask(db.Model):
     status: Mapped[str] = mapped_column(String(20), default='TODO')  # status is independent of its parents
     time_start: Mapped[str] = mapped_column(String(50), default=str(datetime.datetime.now()))
     time_end: Mapped[str] = mapped_column(String(50), nullable=True)
-    parent_task_id: Mapped[int] = mapped_column(Integer, nullable=True)  # one task can link to multiple subtasks
+    parent_task_id: Mapped[int] = mapped_column(Integer, nullable=False)  # one task can link to multiple subtasks
 
 class Tag(db.Model):
     __tablename__ = "tag"
