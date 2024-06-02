@@ -37,7 +37,7 @@ class Task(db.Model):
             "status": self.status,
             "time_start": self.time_start,
             "time_end": self.time_end,
-            "tags": self.tags
+            "tags": list(map(lambda x: x.to_json(), self.tags))
         }
 
 class Subtask(db.Model):
@@ -58,3 +58,9 @@ class Tag(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     tag_value: Mapped[str] = mapped_column(String(50), nullable=False)
     tasks = db.relationship('Task', secondary=task_tags, back_populates='tags')
+
+    def to_json(self):
+        return {
+            "id": self.id,
+            "tag_value": self.tag_value
+        }
