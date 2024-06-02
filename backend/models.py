@@ -52,6 +52,16 @@ class Subtask(db.Model):
     time_end: Mapped[str] = mapped_column(String(50), nullable=True)
     parent_task_id: Mapped[int] = mapped_column(Integer, nullable=False)  # one task can link to multiple subtasks
 
+    def to_json(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "status": self.status,
+            "time_start": self.time_start,
+            "time_end": self.time_end
+        }
+
 class Tag(db.Model):
     __tablename__ = "tag"
 

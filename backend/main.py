@@ -71,6 +71,22 @@ def list_tasks():
     json_tasks = list(map(lambda x: x.to_json(), tasks))
     return jsonify({"tasks": json_tasks})
 
+@app.route("/read/task/<int:task_id>", methods=["GET"])
+def read_task(task_id):
+    task = Task.query.get(task_id)
+    if not task:
+        return jsonify({"message": "Task not found"}), 404
+    json_task = task.to_json()
+    return jsonify(json_task)
+
+@app.route("/read/subtask/<int:subtask_id>", methods=["GET"])
+def read_subtask(subtask_id):
+    subtask = Subtask.query.get(subtask_id)
+    if not subtask:
+        return jsonify({"message": "Subtask not found"}), 404
+    json_subtask = subtask.to_json()
+    return jsonify(json_subtask)
+
 # UPDATE
 
 # DELETE
