@@ -23,7 +23,6 @@ class Task(db.Model):
     status: Mapped[str] = mapped_column(String(20), nullable=False)  # status of task e.g, todo, doing, done, blocked
     time_start: Mapped[datetime.datetime] = mapped_column(DateTime)
     time_end: Mapped[datetime.datetime] = mapped_column(DateTime)  # must end after start date
-    subtask_ids: Mapped[List[int]] = mapped_column(ARRAY(Integer))  # one task can link to multiple subtasks
     tags = db.relationship('Tag', secondary=task_tags, back_populates='tasks')  # subtypes enable finer task categories e.g, midterm, survey
 
 class Subtask(db.Model):
@@ -36,6 +35,7 @@ class Subtask(db.Model):
     status: Mapped[str] = mapped_column(String(20), nullable=False)  # status is independent of its parents
     time_start: Mapped[datetime.datetime] = mapped_column(DateTime)
     time_end: Mapped[datetime.datetime] = mapped_column(DateTime)
+    parent_task_id: Mapped[int]  # one task can link to multiple subtasks
 
 class Tag(db.Model):
     __tablename__ = "tag"
