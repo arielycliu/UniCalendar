@@ -46,7 +46,7 @@ class Subtask(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[Optional[str]] = mapped_column(String(4096), nullable=True)
-    # type must be identical to type of its task parent
+    # type will be identical to type of its task parent
     status: Mapped[str] = mapped_column(String(20), default='TODO')  # status is independent of its parents
     time_start: Mapped[str] = mapped_column(String(50), nullable=True)
     time_end: Mapped[str] = mapped_column(String(50), nullable=True)

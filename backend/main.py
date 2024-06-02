@@ -88,6 +88,56 @@ def read_subtask(subtask_id):
     return jsonify(json_subtask)
 
 # UPDATE
+@app.route("/update/task/<int:task_id>", methods=["PATCH"])
+def update_task(task_id):
+    task = Task.query.get(task_id)
+    if not task:  # task does not exist in database
+        return jsonify({"message": "Task not found"}), 404
+    if request.json.get("type") is not None and task.status != request.json.get("type"): 
+        return jsonify({
+                    "message": "You cannot edit a task type after creation.",
+                    "original type": task.type,
+                    "given type": request.json.get("type") 
+                }), 403
+    task.name = request.json.get("name")
+    task.description = request.json.get("description")
+    task.grade_weight = request.json.get("grade_weight")
+    task.grade_achieved = request.json.get("grade_achieved")
+    task.course_code = request.json.get("course_code")
+    task.status = request.json.get("status") if request.json.get("status") is not None else task.status
+    task.time_start = request.json.get("time_start")
+    task.time_end = request.json.get("time_end")
+    new_tags = request.json.get("tags", [])
+
+    task.tags = []
+    for tag_value in new_tags:
+        tag = Tag.query.filter_by(tag_value=tag_value).first()
+        if not tag:  # if tag does not exist yet, add it
+            tag = Tag(tag_value=tag_value)
+        task.tags.append(tag)
+
+    db.session.commit()
+    return jsonify({"message": "Task successfully updated", "task": {"id": task.id, "name": task.name}}), 200
+
+@app.route("/update/subtask/<int:subtask_id>", methods=["PATCH"])
+def update_subtask(subtask_id):
+    subtask = Subtask.query.get(subtask_id)
+    if not subtask:
+        return jsonify({"message": "Subtask not found"}), 404
+    if request.json.get("parent_task_id") is not None and subtask.parent_task_id != request.json.get("parent_task_id"): 
+        return jsonify({
+                    "message": "You cannot edit a which parent task a sub task belongs after creation.",
+                    "original parent_task_id": subtask.parent_task_id,
+                    "given parent_task_id": request.json.get("parent_task_id") 
+                }), 403
+    subtask.name = request.json.get("name")
+    subtask.description = request.json.get("description")
+    subtask.status = request.json.get("status") if request.json.get("status") is not None else subtask.status
+    subtask.time_start = request.json.get("time_start")
+    subtask.time_end = request.json.get("time_end")
+
+    db.session.commit()
+    return jsonify({"message": "Subtask successfully updated", "subtask": {"id": subtask.id, "name": subtask.name}}), 200
 
 # DELETE
 
