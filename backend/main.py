@@ -147,6 +147,41 @@ def update_subtask(subtask_id):
     return jsonify({"message": "Subtask successfully updated", "subtask": {"id": subtask.id, "name": subtask.name}}), 200
 
 # DELETE
+@app.route("/delete/task/<int:task_id>", methods=["DELETE"])
+def delete_task(task_id):
+    task = Task.query.get(task_id)
+
+    if not task:
+        return jsonify({"message": "Task not found", "task_id": task_id}), 404
+
+    db.session.delete(task)
+    db.session.commit()
+
+    return jsonify({"message": "Task successfully deleted from the database"}), 200
+
+@app.route("/delete/subtask/<int:subtask_id>", methods=["DELETE"])
+def delete_subtask(subtask_id):
+    subtask = Subtask.query.get(subtask_id)
+
+    if not subtask:
+        return jsonify({"message": "Subtask not found", "subtask_id": subtask_id}), 404
+
+    db.session.delete(subtask)
+    db.session.commit()
+
+    return jsonify({"message": "Subtask successfully deleted from the database"}), 200
+
+@app.route("/delete/tag/<int:tag_id>", methods=["DELETE"])
+def delete_tag(tag_id):
+    tag = Tag.query.get(tag_id)
+
+    if not tag:
+        return jsonify({"message": "Tag not found", "tag_id": tag_id}), 404
+
+    db.session.delete(tag)
+    db.session.commit()
+
+    return jsonify({"message": "Tag successfully deleted from the database"}), 200
 
 if __name__ == "__main__":
     with app.app_context():
