@@ -2,30 +2,43 @@ from config import app, db
 from flask import request, jsonify
 from models import Task, Subtask, Tag
 
+def parse_task_data_from_request():
+    return {
+        "name": request.json.get("name"),
+        "description": request.json.get("description"),
+        "type": request.json.get("type"),
+        "grade_weight": request.json.get("grade_weight"),
+        "grade_achieved": request.json.get("grade_achieved"),
+        "course_code": request.json.get("course_code"),
+        "status": request.json.get("status"),
+        "time_start": request.json.get("time_start"),
+        "time_end": request.json.get("time_end"),
+    }, request.json.get("tags", [])
+
+def parse_subtask_data_from_request():
+    return {
+        "name": request.json.get("name"),
+        "description": request.json.get("description"),
+        "status": request.json.get("status"),
+        "time_start": request.json.get("time_start"),
+        "time_end": request.json.get("time_end"),
+        "parent_task_id": request.json.get("parent_task_id")
+    }
+
 # CREATE
 @app.route("/create/task", methods=["POST"])
 def create_task():
-    name = request.json.get("name")
-    description = request.json.get("description")
-    type = request.json.get("type")
-    tags = request.json.get("tags", [])
-    grade_weight = request.json.get("grade_weight")
-    grade_achieved = request.json.get("grade_achieved")
-    course_code = request.json.get("course_code")
-    status = request.json.get("status")
-    time_start = request.json.get("time_start")
-    time_end = request.json.get("time_end")
+    task_data, tags = parse_task_data_from_request()
 
     # Checks
-    if not name or not type:
+    if task_data["name"] is None or task_data["type"] is None:
         return (jsonify({"message": "You must indicate name of task and task type"}), 400)
-    if not status:
-        status = "TODO"
-    if type not in ["Assignment", "Test"]:
-        return (jsonify({"message": "Invalid task type"}), 400)
+    if not task_data["status"]:
+        task_data["status"] = "TODO"
+    if task_data["type"] not in ["Assignment", "Test"]:
+        return (jsonify({"message": "Invalid task type", "task_type": task_data["type"]}), 400)
 
-    new_task = Task(name=name, description=description, type=type, grade_weight=grade_weight, grade_achieved=grade_achieved, course_code=course_code, status=status, time_start=time_start, time_end=time_end,
-    tags=[])
+    new_task = Task(**task_data, tags=[])
 
     for tag_value in tags:
         tag = Tag.query.filter_by(tag_value=tag_value).first()
@@ -42,21 +55,15 @@ def create_task():
 
 @app.route("/create/subtask", methods=["POST"])
 def create_subtask():
-    name = request.json.get("name")
-    description = request.json.get("description")
-    status = request.json.get("status")
-    time_start = request.json.get("time_start")
-    time_end = request.json.get("time_end")
-    parent_task_id = request.json.get("parent_task_id")
+    subtask_data = parse_subtask_data_from_request()
 
     # Checks
-    if not name or not parent_task_id:
+    if not subtask_data["name"] or not subtask_data["parent_task_id"]:
         return (jsonify({"message": "You must indicate name of subtask and parent task ID"}), 400)
-    if not status:
-        status = "TODO"
+    if not subtask_data["status"]:
+        subtask_data["status"] = "TODO"
 
-    new_subtask = Subtask(name=name, description=description, status=status, time_start=time_start, time_end=time_end,
-    parent_task_id=parent_task_id)
+    new_subtask = Subtask(**subtask_data)
     try:
         db.session.add(new_subtask)
         db.session.commit()
@@ -93,21 +100,19 @@ def update_task(task_id):
     task = Task.query.get(task_id)
     if not task:  # task does not exist in database
         return jsonify({"message": "Task not found"}), 404
-    if request.json.get("type") is not None and task.status != request.json.get("type"): 
+    
+    task_data, new_tags = parse_task_data_from_request()
+
+    if task.type != task_data["type"]: 
         return jsonify({
-                    "message": "You cannot edit a task type after creation.",
+                    "message": "You cannot edit task type after creation.",
                     "original type": task.type,
-                    "given type": request.json.get("type") 
+                    "given type": task_data["type"]
                 }), 403
-    task.name = request.json.get("name")
-    task.description = request.json.get("description")
-    task.grade_weight = request.json.get("grade_weight")
-    task.grade_achieved = request.json.get("grade_achieved")
-    task.course_code = request.json.get("course_code")
-    task.status = request.json.get("status") if request.json.get("status") is not None else task.status
-    task.time_start = request.json.get("time_start")
-    task.time_end = request.json.get("time_end")
-    new_tags = request.json.get("tags", [])
+    if task_data["status"] is None: task_data["status"] = task.status
+    
+    for key, value in task_data.items():
+        setattr(task, key, value)
 
     task.tags = []
     for tag_value in new_tags:
@@ -122,19 +127,21 @@ def update_task(task_id):
 @app.route("/update/subtask/<int:subtask_id>", methods=["PATCH"])
 def update_subtask(subtask_id):
     subtask = Subtask.query.get(subtask_id)
+
+    subtask_data = parse_subtask_data_from_request()
+
     if not subtask:
         return jsonify({"message": "Subtask not found"}), 404
-    if request.json.get("parent_task_id") is not None and subtask.parent_task_id != request.json.get("parent_task_id"): 
+    if subtask.parent_task_id != subtask_data["parent_task_id"]: 
         return jsonify({
                     "message": "You cannot edit a which parent task a sub task belongs after creation.",
                     "original parent_task_id": subtask.parent_task_id,
-                    "given parent_task_id": request.json.get("parent_task_id") 
+                    "given parent_task_id": subtask_data["parent_task_id"]
                 }), 403
-    subtask.name = request.json.get("name")
-    subtask.description = request.json.get("description")
-    subtask.status = request.json.get("status") if request.json.get("status") is not None else subtask.status
-    subtask.time_start = request.json.get("time_start")
-    subtask.time_end = request.json.get("time_end")
+    if subtask_data["status"] is None: subtask_data["status"] = subtask.status
+
+    for key, value in subtask_data.items():
+        setattr(subtask, key, value)
 
     db.session.commit()
     return jsonify({"message": "Subtask successfully updated", "subtask": {"id": subtask.id, "name": subtask.name}}), 200
