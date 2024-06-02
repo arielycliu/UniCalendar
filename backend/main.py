@@ -23,6 +23,8 @@ def create_task():
         status = "TODO"
     if type not in ["Assignment", "Test"]:
         return (jsonify({"message": "Invalid task type"}), 400)
+    if not tags:
+        tags = []
 
     new_task = Task(name=name, description=description, type=type, grade_weight=grade_weight, grade_achieved=grade_achieved, course_code=course_code, status=status, time_start=time_start, time_end=time_end,
     tags=tags)
@@ -31,7 +33,7 @@ def create_task():
         db.session.commit()
     except Exception as e:
         return jsonify({"message": str(e)}, 500)
-    return jsonify({"message": "Task successfully added"}, 201)
+    return jsonify({"message": "Task successfully created", "task": {"id": new_task.id, "name": new_task.name}}), 201
 
 # READ
 
