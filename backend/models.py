@@ -25,6 +25,21 @@ class Task(db.Model):
     time_end: Mapped[str] = mapped_column(String(50), nullable=True)  # must end after start date
     tags = db.relationship('Tag', secondary=task_tags, back_populates='tasks')  # subtypes enable finer task categories e.g, midterm, survey
 
+    def to_json(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "type": self.type,
+            "grade_weight": self.grade_weight,
+            "grade_achieved": self.grade_achieved,
+            "course_code": self.course_code,
+            "status": self.status,
+            "time_start": self.time_start,
+            "time_end": self.time_end,
+            "tags": self.tags
+        }
+
 class Subtask(db.Model):
     __tablename__ = "subtask"
 

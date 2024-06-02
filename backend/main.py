@@ -60,6 +60,11 @@ def create_subtask():
     return jsonify({"message": "Subtask successfully created", "subtask": {"id": new_subtask.id, "name": new_subtask.name}}), 201
 
 # READ
+@app.route("/read/list_tasks", methods=["GET"])
+def list_tasks():
+    tasks = Task.query.all()
+    json_tasks = list(map(lambda x: x.to_json(), tasks))
+    return jsonify({"tasks": json_tasks})
 
 # UPDATE
 
