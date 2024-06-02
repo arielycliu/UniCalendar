@@ -35,6 +35,30 @@ def create_task():
         return jsonify({"message": str(e)}, 500)
     return jsonify({"message": "Task successfully created", "task": {"id": new_task.id, "name": new_task.name}}), 201
 
+@app.route("/create/subtask", methods=["POST"])
+def create_subtask():
+    name = request.json.get("name")
+    description = request.json.get("description")
+    status = request.json.get("status")
+    time_start = request.json.get("time_start")
+    time_end = request.json.get("time_end")
+    parent_task_id = request.json.get("parent_task_id")
+
+    # Checks
+    if not name or not parent_task_id:
+        return (jsonify({"message": "You must indicate name of subtask and parent task ID"}), 400)
+    if not status:
+        status = "TODO"
+
+    new_subtask = Subtask(name=name, description=description, status=status, time_start=time_start, time_end=time_end,
+    parent_task_id=parent_task_id)
+    try:
+        db.session.add(new_subtask)
+        db.session.commit()
+    except Exception as e:
+        return jsonify({"message": str(e)}, 500)
+    return jsonify({"message": "Subtask successfully created", "subtask": {"id": new_subtask.id, "name": new_subtask.name}}), 201
+
 # READ
 
 # UPDATE
