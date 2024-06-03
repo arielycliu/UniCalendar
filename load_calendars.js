@@ -38,7 +38,7 @@ function getLastDayOfMonth(year, month) {
     return new Date(year, month + 1, 0).getDate();
 }
 
-window.onload = function() {
+document.addEventListener('DOMContentLoaded', function() {
     let calendar = document.getElementById("calendar");
     let calendarHeading = document.getElementById("monthheading");
 
@@ -48,4 +48,4 @@ window.onload = function() {
     calendarHeading = document.getElementById("minimonthheading");
 
     populateCalendar(calendar, calendarHeading);
-};
+});

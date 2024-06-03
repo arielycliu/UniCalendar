@@ -75,6 +75,9 @@ button {
 #minicalendar thead th {
     padding-bottom: 1%;
 }
+.highlight {
+background-color: rgb(199, 225, 249);
+}
 
 #minicalendar tbody td.blank {
     border: 0px solid white;
