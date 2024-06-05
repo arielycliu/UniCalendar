@@ -1,6 +1,7 @@
 from config import app, db
 from flask import request, jsonify
 from models import Task, Subtask, Tag
+from enums import status_codes
 
 def parse_task_data_from_request():
     return {
@@ -32,11 +33,11 @@ def create_task():
 
     # Checks
     if task_data["name"] is None or task_data["type"] is None:
-        return (jsonify({"message": "You must indicate name of task and task type"}), 400)
+        return (jsonify({"message": "You must indicate name of task and task type"}), status_codes.HTTP_400_Bad_Request.value)
     if not task_data["status"]:
         task_data["status"] = "TODO"
     if task_data["type"] not in ["Assignment", "Test"]:
-        return (jsonify({"message": "Invalid task type", "task_type": task_data["type"]}), 400)
+        return (jsonify({"message": "Invalid task type", "task_type": task_data["type"]}), status_codes.HTTP_400_Bad_Request.value)
 
     new_task = Task(**task_data, tags=[])
 
@@ -50,8 +51,8 @@ def create_task():
         db.session.add(new_task)
         db.session.commit()
     except Exception as e:
-        return jsonify({"message": str(e)}, 500)
-    return jsonify({"message": "Task successfully created", "task": {"id": new_task.id, "name": new_task.name}}), 201
+        return jsonify({"message": str(e)}, status_codes.HTTP_500_Internal_Server_Error.value)
+    return jsonify({"message": "Task successfully created", "task": {"id": new_task.id, "name": new_task.name}}), status_codes.HTTP_201_Created.value
 
 @app.route("/create/subtask", methods=["POST"])
 def create_subtask():
@@ -59,7 +60,7 @@ def create_subtask():
 
     # Checks
     if not subtask_data["name"] or not subtask_data["parent_task_id"]:
-        return (jsonify({"message": "You must indicate name of subtask and parent task ID"}), 400)
+        return (jsonify({"message": "You must indicate name of subtask and parent task ID"}), status_codes.HTTP_400_Bad_Request.value)
     if not subtask_data["status"]:
         subtask_data["status"] = "TODO"
 
@@ -68,8 +69,8 @@ def create_subtask():
         db.session.add(new_subtask)
         db.session.commit()
     except Exception as e:
-        return jsonify({"message": str(e)}, 500)
-    return jsonify({"message": "Subtask successfully created", "subtask": {"id": new_subtask.id, "name": new_subtask.name}}), 201
+        return jsonify({"message": str(e)}, status_codes.HTTP_500_Internal_Server_Error.value)
+    return jsonify({"message": "Subtask successfully created", "subtask": {"id": new_subtask.id, "name": new_subtask.name}}), status_codes.HTTP_201_Created.value
 
 # READ
 @app.route("/read/list_tasks", methods=["GET"])
@@ -82,7 +83,7 @@ def list_tasks():
 def read_task(task_id):
     task = Task.query.get(task_id)
     if not task:
-        return jsonify({"message": "Task not found"}), 404
+        return jsonify({"message": "Task not found"}), status_codes.HTTP_404_Not_Found.value
     json_task = task.to_json()
     return jsonify(json_task)
 
@@ -90,7 +91,7 @@ def read_task(task_id):
 def read_subtask(subtask_id):
     subtask = Subtask.query.get(subtask_id)
     if not subtask:
-        return jsonify({"message": "Subtask not found"}), 404
+        return jsonify({"message": "Subtask not found"}), status_codes.HTTP_404_Not_Found.value
     json_subtask = subtask.to_json()
     return jsonify(json_subtask)
 
@@ -99,7 +100,7 @@ def read_subtask(subtask_id):
 def update_task(task_id):
     task = Task.query.get(task_id)
     if not task:  # task does not exist in database
-        return jsonify({"message": "Task not found"}), 404
+        return jsonify({"message": "Task not found"}), status_codes.HTTP_404_Not_Found.value
     
     task_data, new_tags = parse_task_data_from_request()
 
@@ -108,7 +109,7 @@ def update_task(task_id):
                     "message": "You cannot edit task type after creation.",
                     "original type": task.type,
                     "given type": task_data["type"]
-                }), 403
+                }), status_codes.HTTP_403_Forbidden.value
     if task_data["status"] is None: task_data["status"] = task.status
     
     for key, value in task_data.items():
@@ -122,7 +123,7 @@ def update_task(task_id):
         task.tags.append(tag)
 
     db.session.commit()
-    return jsonify({"message": "Task successfully updated", "task": {"id": task.id, "name": task.name}}), 200
+    return jsonify({"message": "Task successfully updated", "task": {"id": task.id, "name": task.name}}), status_codes.HTTP_200_OK.value
 
 @app.route("/update/subtask/<int:subtask_id>", methods=["PATCH"])
 def update_subtask(subtask_id):
@@ -131,20 +132,20 @@ def update_subtask(subtask_id):
     subtask_data = parse_subtask_data_from_request()
 
     if not subtask:
-        return jsonify({"message": "Subtask not found"}), 404
+        return jsonify({"message": "Subtask not found"}), status_codes.HTTP_404_Not_Found.value
     if subtask.parent_task_id != subtask_data["parent_task_id"]: 
         return jsonify({
                     "message": "You cannot edit a which parent task a sub task belongs after creation.",
                     "original parent_task_id": subtask.parent_task_id,
                     "given parent_task_id": subtask_data["parent_task_id"]
-                }), 403
+                }), status_codes.HTTP_403_Forbidden.value
     if subtask_data["status"] is None: subtask_data["status"] = subtask.status
 
     for key, value in subtask_data.items():
         setattr(subtask, key, value)
 
     db.session.commit()
-    return jsonify({"message": "Subtask successfully updated", "subtask": {"id": subtask.id, "name": subtask.name}}), 200
+    return jsonify({"message": "Subtask successfully updated", "subtask": {"id": subtask.id, "name": subtask.name}}), status_codes.HTTP_200_OK.value
 
 # DELETE
 @app.route("/delete/task/<int:task_id>", methods=["DELETE"])
@@ -152,36 +153,36 @@ def delete_task(task_id):
     task = Task.query.get(task_id)
 
     if not task:
-        return jsonify({"message": "Task not found", "task_id": task_id}), 404
+        return jsonify({"message": "Task not found", "task_id": task_id}), status_codes.HTTP_404_Not_Found.value
 
     db.session.delete(task)
     db.session.commit()
 
-    return jsonify({"message": "Task successfully deleted from the database"}), 200
+    return jsonify({"message": "Task successfully deleted from the database"}), status_codes.HTTP_200_OK.value
 
 @app.route("/delete/subtask/<int:subtask_id>", methods=["DELETE"])
 def delete_subtask(subtask_id):
     subtask = Subtask.query.get(subtask_id)
 
     if not subtask:
-        return jsonify({"message": "Subtask not found", "subtask_id": subtask_id}), 404
+        return jsonify({"message": "Subtask not found", "subtask_id": subtask_id}), status_codes.HTTP_404_Not_Found.value
 
     db.session.delete(subtask)
     db.session.commit()
 
-    return jsonify({"message": "Subtask successfully deleted from the database"}), 200
+    return jsonify({"message": "Subtask successfully deleted from the database"}), status_codes.HTTP_200_OK.value
 
 @app.route("/delete/tag/<int:tag_id>", methods=["DELETE"])
 def delete_tag(tag_id):
     tag = Tag.query.get(tag_id)
 
     if not tag:
-        return jsonify({"message": "Tag not found", "tag_id": tag_id}), 404
+        return jsonify({"message": "Tag not found", "tag_id": tag_id}), status_codes.HTTP_404_Not_Found.value
 
     db.session.delete(tag)
     db.session.commit()
 
-    return jsonify({"message": "Tag successfully deleted from the database"}), 200
+    return jsonify({"message": "Tag successfully deleted from the database"}), status_codes.HTTP_200_OK.value
 
 if __name__ == "__main__":
     with app.app_context():
