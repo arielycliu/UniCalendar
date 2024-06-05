@@ -10,3 +10,13 @@ class status_codes(Enum):
     HTTP_404_Not_Found = 404
     HTTP_418_Teapot = 418
     HTTP_500_Internal_Server_Error = 500
+
+class task_status(Enum):
+    TODO = 'TODO'
+    IN_PROGRESS = 'IN PROGRESS'
+    DONE = 'DONE'
+    BLOCKED = 'BLOCKED'
+
+class task_type(Enum):
+    ASSIGNMENT = "Assignment"
+    TEST = "TEST"

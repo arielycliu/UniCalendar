@@ -1,7 +1,7 @@
 from config import app, db
 from flask import request, jsonify
 from models import Task, Subtask, Tag
-from enums import status_codes
+from enums import status_codes, task_status, task_type
 
 def parse_task_data_from_request():
     return {
@@ -35,8 +35,8 @@ def create_task():
     if task_data["name"] is None or task_data["type"] is None:
         return (jsonify({"message": "You must indicate name of task and task type"}), status_codes.HTTP_400_Bad_Request.value)
     if not task_data["status"]:
-        task_data["status"] = "TODO"
-    if task_data["type"] not in ["Assignment", "Test"]:
+        task_data["status"] = task_status.TODO.value
+    if task_data["type"] not in set(type.value for type in task_type):
         return (jsonify({"message": "Invalid task type", "task_type": task_data["type"]}), status_codes.HTTP_400_Bad_Request.value)
 
     new_task = Task(**task_data, tags=[])
@@ -62,7 +62,7 @@ def create_subtask():
     if not subtask_data["name"] or not subtask_data["parent_task_id"]:
         return (jsonify({"message": "You must indicate name of subtask and parent task ID"}), status_codes.HTTP_400_Bad_Request.value)
     if not subtask_data["status"]:
-        subtask_data["status"] = "TODO"
+        subtask_data["status"] = task_status.TODO.value
 
     new_subtask = Subtask(**subtask_data)
     try:
