@@ -1,0 +1,111 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay div p {
+    text-decoration: underline;
+    font-style: italic;
+    font-size: 13px;
+}
+  
+.modal {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    width: 50vw;
+    height: max-content;
+    margin: 0 auto;
+    position: relative;
+}
+  
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    padding: 5px;
+    width: 50px;
+    height: 50px;
+    align-items: center;
+}
+.close-button:hover {
+    background: rgb(231, 231, 231);
+    border: 1px black;
+    border-radius: 100%;
+}
+
+.create-form div {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: top;
+}
+
+.create-form div label {
+    margin-right: 10px;
+}
+
+.create-form div select {
+    padding: 10px 20px;
+    border: 0px;
+    border-radius: 15px;
+    cursor: pointer;
+    background-color: rgb(253, 247, 178);
+}
+.create-form div option {
+    padding: 5px;
+    border: 0px;
+}
+/* Use important! to move these background colors to highest css priority */
+.todo {
+    background-color: rgb(253, 247, 178) !important; 
+}
+
+.in-progress {
+    background-color: rgb(163, 231, 164) !important;
+}
+
+.done {
+    background-color: rgb(163, 211, 255) !important;
+}
+  
+.create-form button {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    border-radius: 50px;
+    background-color: rgb(231, 231, 231);
+    border: 0px black;
+    margin-top: 50px;
+}
+.create-form button:hover {
+    background-color: rgb(214, 214, 214);
+    border: 0px black;
+}
+
+.horizontal-group {
+    display: flex;
+    gap: 10px;
+}
+
+.horizontal-group {
+    display: flex;
+    gap: 10px;
+}
+#grade_weight,
+#numberOfTasks {
+    width: 60px;
+}
+#description {
+    height: 40px;
+}
+

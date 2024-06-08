@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import "./Calendar.css";
+import Day from "./Day"
 
-
-
-export default function Calendar({ tasks }) {
+export default function Calendar({ tasks, handleOpenModal }) {
 
 	const today = new Date();
   	const [currentDate, setCurrentDate] = useState(today);
@@ -24,12 +23,7 @@ export default function Calendar({ tasks }) {
 			date1.getMonth() === date2.getMonth() &&
 			date1.getDate() === date2.getDate()
 		);
-	};
-
-	const noDateTasks = tasks.filter((task) => {
-		return (task.time_end === null & task.time_end === null);
-	});
-	
+	};	
 
 	const generateCalendar = () => {
 		const days = [];
@@ -59,29 +53,11 @@ export default function Calendar({ tasks }) {
 				const currentDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
 				currentDay.setHours(0, 0, 0, 0);
 				const inRange = taskStart < currentDay && currentDay < taskEnd;
-				console.log(`Checking barTasks for day ${i}: ${taskStart} vs ${currentDay} vs ${taskEnd}. Result is ${inRange}`);
 				return inRange;
 			});
 		
 			days.push(
-				<div className="calendar-day" key={`day-${i}`}>
-					<div className="day-number">{i}</div>
-					<div className="day-tasks">
-						{
-							namedTasks.map((task) => (
-								<div key={task.id} className="task-spanner">
-									{task.name}
-								</div>
-							))
-						}
-						{
-							barTasks.map((task) => (
-								<div key={task.id} className="task-spanner-extended">
-								</div>
-							))
-						}
-					</div>
-				</div>
+				<Day key={`day-${i}`}namedTasks={namedTasks} barTasks={barTasks} i={i}  handleOpenModal={handleOpenModal} />
 			);
 		}
 
@@ -124,30 +100,6 @@ export default function Calendar({ tasks }) {
 					<div className="calendar-day-name">Sat</div>
 					{generateCalendar()}
 				</div>
-			</div>
-			<div className="floating-tasks">
-				<h2>Floating Tasks</h2>
-				<p>Tasks with no start or end date go here</p>
-				<table className="float-task-table">
-					<thead>
-						<tr>
-							<th>name</th>
-							<th>status</th>
-							<th>type</th>
-							<th>course code</th>
-						</tr>
-					</thead>
-					<tbody>
-						{noDateTasks.map((task) => (
-							<tr key={task.id}>
-								<td>{task.name}</td>
-								<td>{task.status}</td>
-								<td>{task.type}</td>
-								<td>{task.course_code}</td>
-							</tr>
-						))}
-					</tbody>
-				</table>
 			</div>
 		</>	
   	);

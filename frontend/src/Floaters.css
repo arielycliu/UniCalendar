@@ -1,0 +1,57 @@
+.floating-tasks {
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+.floating-tasks h2 {
+    margin-bottom: 5px;
+}
+.float-task-table {
+    border-collapse: collapse;
+    gap: 0px;
+    width: 70vw;
+}
+
+.float-task-table thead th,
+.float-task-table tbody td {
+    text-align: left;
+    border: 1px solid black;
+    padding: 7px;
+}
+.float-tags {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.float-tag {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #decfc2;
+    border-radius: 3px;
+    padding: 5px 10px 5px 10px;
+    margin: 5px;
+    font-size: 14px;
+}
+
+.todo, 
+.in-progress,
+.done {
+    display: block;
+    width: fit-content;
+    padding: 5px 15px;
+    border-radius: 20px;
+}
+
+.todo {
+    background-color: rgb(253, 247, 178) !important; 
+}
+
+.in-progress {
+    background-color: rgb(163, 231, 164) !important;
+}
+
+.done {
+    background-color: rgb(163, 211, 255) !important;
+}

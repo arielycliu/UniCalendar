@@ -25,7 +25,8 @@ a:hover {
 }
 
 body {
-  margin: 0;
+  margin: 5%;
+  margin-bottom: 15%;
   display: flex;
   justify-content: center;
   align-items: center;
