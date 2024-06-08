@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import "./Calendar.css";
 import Day from "./Day"
-
+import CreateModal from './CreateModal';
 
 export default function Calendar({ tasks }) {
 
 	const today = new Date();
   	const [currentDate, setCurrentDate] = useState(today);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+
+	const handleOpenModal = () => setIsModalOpen(true);
+	const handleCloseModal = () => setIsModalOpen(false);
 
 	const weekDayOfStartDay = (curdate) => {
 		const start = new Date(curdate.getFullYear(), curdate.getMonth(), 1);
@@ -54,12 +58,11 @@ export default function Calendar({ tasks }) {
 				const currentDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
 				currentDay.setHours(0, 0, 0, 0);
 				const inRange = taskStart < currentDay && currentDay < taskEnd;
-				console.log(`Checking barTasks for day ${i}: ${taskStart} vs ${currentDay} vs ${taskEnd}. Result is ${inRange}`);
 				return inRange;
 			});
 		
 			days.push(
-				<Day namedTasks={namedTasks} barTasks={barTasks} i={i} />
+				<Day namedTasks={namedTasks} barTasks={barTasks} i={i}  handleOpenModal={handleOpenModal} />
 			);
 		}
 
@@ -102,6 +105,7 @@ export default function Calendar({ tasks }) {
 					<div className="calendar-day-name">Sat</div>
 					{generateCalendar()}
 				</div>
+				<CreateModal show={isModalOpen} onClose={handleCloseModal} />
 			</div>
 		</>	
   	);
