@@ -81,23 +81,3 @@
     position: relative;
     z-index: 1;
 }
-
-.floating-tasks {
-    margin-top: 5%;
-}
-.floating-tasks h2 {
-    margin-bottom: 5px;
-}
-.float-task-table {
-    margin-bottom: 30%;
-    border-collapse: collapse;
-    gap: 0px;
-    width: 70vw;
-}
-
-.float-task-table thead th,
-.float-task-table tbody td {
-    text-align: left;
-    border: 1px solid black;
-    padding: 7px;
-}

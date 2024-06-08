@@ -1,5 +1,14 @@
 import { useEffect, useState } from "react";
 import Calendar from "./Calendar"
+import Floaters from "./Floaters";
+import Colors from "./Colors";
+
+const colors = {
+	"CSC207": "#8E7AB5",
+	"MAT237": "#B784B7",
+	"CSC236": "#E493B3",
+	"STA237": "#EEA5A6"
+}
 
 function App() {
 
@@ -55,6 +64,8 @@ function App() {
 	return (
 		<>
 			<Calendar tasks={tasks}/>
+			<Floaters tasks={tasks}/>
+			<Colors colors={colors}/>
 		</>
 	)
 }

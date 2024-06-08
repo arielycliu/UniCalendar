@@ -1,0 +1,19 @@
+.floating-tasks {
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+.floating-tasks h2 {
+    margin-bottom: 5px;
+}
+.float-task-table {
+    border-collapse: collapse;
+    gap: 0px;
+    width: 70vw;
+}
+
+.float-task-table thead th,
+.float-task-table tbody td {
+    text-align: left;
+    border: 1px solid black;
+    padding: 7px;
+}
