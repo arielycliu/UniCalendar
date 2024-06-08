@@ -34,3 +34,24 @@
     margin: 5px;
     font-size: 14px;
 }
+
+.todo, 
+.in-progress,
+.done {
+    display: block;
+    width: fit-content;
+    padding: 5px 15px;
+    border-radius: 20px;
+}
+
+.todo {
+    background-color: rgb(253, 247, 178) !important; 
+}
+
+.in-progress {
+    background-color: rgb(163, 231, 164) !important;
+}
+
+.done {
+    background-color: rgb(163, 211, 255) !important;
+}

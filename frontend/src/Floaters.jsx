@@ -5,6 +5,19 @@ export default function Floaters({ tasks }) {
 		return (task.time_end === null && task.time_end === null) || (task.time_end === "" && task.time_end === "");
 	});
 
+	const getStatusStyle = (status) => {
+        switch (status) {
+            case 'TODO':
+                return 'todo';
+            case 'IN_PROGRESS':
+                return 'in-progress';
+            case 'DONE':
+                return 'done';
+            default:
+                return '';
+        }
+    };
+
     return (
         <>
             <div className="floating-tasks">
@@ -23,7 +36,11 @@ export default function Floaters({ tasks }) {
 						{noDateTasks.map((task) => (
 							<tr key={`floating-${task.id}`}>
 								<td>{task.name}</td>
-								<td>{task.status}</td>
+								<td>
+									<div className={getStatusStyle(task.status)}>
+										{task.status}
+									</div>
+								</td>
 								<td>{task.course_code}</td>
 								<td>
 									<div class="float-tags">
