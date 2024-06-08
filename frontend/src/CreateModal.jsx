@@ -3,9 +3,8 @@ import './CreateModal.css'
 import Tags from './Tags';
 
 
-export default function CreateModal({ show, onClose }) {
+export default function CreateModal({ show, onModalClose }) {
     const [name, setName] = useState("");
-    const [numberOfTasks, setNumberOfTasks] = useState(1);
     const [description, setDescription] = useState("");
     const [gradeWeight, setGradeWeight] = useState(0);
     const [gradeAchieved, setGradeAchieved] = useState(0);
@@ -51,7 +50,7 @@ export default function CreateModal({ show, onClose }) {
         const response = await fetch(`http://127.0.0.1:5000/create/task`, options)
         const response_data = await response.json()
         alert(response_data.message);
-        
+        onModalClose();
     }
 
     if (!show) {
@@ -59,10 +58,10 @@ export default function CreateModal({ show, onClose }) {
     }
     
     return (
-        <div className="modal-overlay" onClick={onClose}>
+        <div className="modal-overlay" onClick={onModalClose}>
             {/* prevents clicks inside the modal content from triggering anything behind it */}
             <div className="modal" onClick={e => e.stopPropagation()}> 
-            <button className="close-button" onClick={onClose}>
+            <button className="close-button" onClick={onModalClose}>
                 &times;
             </button>
             <div>
@@ -75,20 +74,10 @@ export default function CreateModal({ show, onClose }) {
                             <input
                                 type="text"
                                 id="name"
-                                required="true"
+                                required={true}
                                 onChange={(e) => setName(e.target.value)}
                             />
                         </div>
-                        {/* <div>
-                            <label htmlFor="number_of_tasks">Number of tasks to create:</label>
-                            <input
-                                type="number"
-                                min="1" max="50"
-                                id="numberOfTasks"
-                                value="1"
-                                onChange={(e) => setNumberOfTasks(e.target.value)}
-                            />
-                        </div> */}
                     </div>
                     <div>
                         <label htmlFor="description">Description:</label>

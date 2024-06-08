@@ -2,7 +2,7 @@ import "./Floaters.css";
 
 export default function Floaters({ tasks }) {
     const noDateTasks = tasks.filter((task) => {
-		return (task.time_end === null & task.time_end === null);
+		return (task.time_end === null && task.time_end === null) || (task.time_end === "" && task.time_end === "");
 	});
 
     return (
@@ -21,11 +21,19 @@ export default function Floaters({ tasks }) {
 					</thead>
 					<tbody>
 						{noDateTasks.map((task) => (
-							<tr key={task.id}>
+							<tr key={`floating-${task.id}`}>
 								<td>{task.name}</td>
 								<td>{task.status}</td>
 								<td>{task.course_code}</td>
-								<td>{task.tag}</td>
+								<td>
+									<div class="float-tags">
+									{
+										task.tags.map((tag, index) => (
+											<li key={index} className="float-tag">{tag.tag_value}</li>
+                                    	)
+									)}
+									</div>
+								</td>
 							</tr>
 						))}
 					</tbody>

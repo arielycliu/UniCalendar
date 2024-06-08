@@ -1,16 +1,11 @@
 import React, { useState } from "react";
 import "./Calendar.css";
 import Day from "./Day"
-import CreateModal from './CreateModal';
 
-export default function Calendar({ tasks }) {
+export default function Calendar({ tasks, handleOpenModal }) {
 
 	const today = new Date();
   	const [currentDate, setCurrentDate] = useState(today);
-	const [isModalOpen, setIsModalOpen] = useState(false);
-
-	const handleOpenModal = () => setIsModalOpen(true);
-	const handleCloseModal = () => setIsModalOpen(false);
 
 	const weekDayOfStartDay = (curdate) => {
 		const start = new Date(curdate.getFullYear(), curdate.getMonth(), 1);
@@ -62,7 +57,7 @@ export default function Calendar({ tasks }) {
 			});
 		
 			days.push(
-				<Day namedTasks={namedTasks} barTasks={barTasks} i={i}  handleOpenModal={handleOpenModal} />
+				<Day key={`day-${i}`}namedTasks={namedTasks} barTasks={barTasks} i={i}  handleOpenModal={handleOpenModal} />
 			);
 		}
 
@@ -105,7 +100,6 @@ export default function Calendar({ tasks }) {
 					<div className="calendar-day-name">Sat</div>
 					{generateCalendar()}
 				</div>
-				<CreateModal show={isModalOpen} onClose={handleCloseModal} />
 			</div>
 		</>	
   	);

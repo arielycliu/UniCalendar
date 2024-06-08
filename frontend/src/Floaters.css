@@ -17,3 +17,20 @@
     border: 1px solid black;
     padding: 7px;
 }
+.float-tags {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.float-tag {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #decfc2;
+    border-radius: 3px;
+    padding: 5px 10px 5px 10px;
+    margin: 5px;
+    font-size: 14px;
+}

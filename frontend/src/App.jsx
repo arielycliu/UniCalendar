@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Calendar from "./Calendar"
 import Floaters from "./Floaters";
 import Colors from "./Colors";
+import CreateModal from './CreateModal';
 
 const colors = {
 	"CSC207": "#8E7AB5",
@@ -16,13 +17,23 @@ function App() {
 	
 	useEffect(() => {
 		// addTask()
-		fetchTasks()
+		fetchTasks();
 	}, []);
+
+	const [isModalOpen, setIsModalOpen] = useState(false);
+
+	const handleOpenModal = () => setIsModalOpen(true);
+	const handleCloseModal = () => setIsModalOpen(false);
 
 	const fetchTasks = async() => {
 		const apiResponse = await fetch("http://127.0.0.1:5000/read/list_tasks");
 		const data = await apiResponse.json();
 		setTasks(data.tasks);
+	}
+
+	const onModalClose = () => {
+		handleCloseModal();
+		fetchTasks();
 	}
 
 	const addTask = async() => {
@@ -62,9 +73,10 @@ function App() {
 
 	return (
 		<>
-			<Calendar tasks={tasks}/>
+			<Calendar tasks={tasks} handleOpenModal={handleOpenModal} />
 			<Floaters tasks={tasks}/>
 			<Colors colors={colors}/>
+			<CreateModal show={isModalOpen} onModalClose={onModalClose} />
 		</>
 	)
 }
