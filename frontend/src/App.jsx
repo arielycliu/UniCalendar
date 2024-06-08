@@ -27,12 +27,11 @@ function App() {
 
 	const addTask = async() => {
 		const data = {
-			"name": "CS Labs",
-			"type": "Assignment",
+			"name": "Learn React",
 			"time_start": "2024-06-01T04:00:00.000Z",
 			"time_end": "2024-06-07T21:19:06.158Z",
-			"tags": ["Lab"],
-			"course_code": "CSC258"
+			"tags": ["Learning"],
+			"course_code": "Self"
 		}
 		const options = {
 			method: "POST",

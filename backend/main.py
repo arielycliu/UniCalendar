@@ -1,13 +1,12 @@
 from config import app, db
 from flask import request, jsonify
 from models import Task, Subtask, Tag
-from enums import status_codes, task_status, task_type
+from enums import status_codes, task_status
 
 def parse_task_data_from_request():
     return {
         "name": request.json.get("name"),
         "description": request.json.get("description"),
-        "type": request.json.get("type"),
         "grade_weight": request.json.get("grade_weight"),
         "grade_achieved": request.json.get("grade_achieved"),
         "course_code": request.json.get("course_code"),
@@ -32,12 +31,10 @@ def create_task():
     task_data, tags = parse_task_data_from_request()
 
     # Checks
-    if task_data["name"] is None or task_data["type"] is None:
-        return (jsonify({"message": "You must indicate name of task and task type"}), status_codes.HTTP_400_Bad_Request.value)
+    if task_data["name"] is None:
+        return (jsonify({"message": "You must indicate name of task"}), status_codes.HTTP_400_Bad_Request.value)
     if not task_data["status"]:
         task_data["status"] = task_status.TODO.value
-    if task_data["type"] not in set(type.value for type in task_type):
-        return (jsonify({"message": "Invalid task type", "task_type": task_data["type"]}), status_codes.HTTP_400_Bad_Request.value)
 
     new_task = Task(**task_data, tags=[])
 
@@ -104,12 +101,6 @@ def update_task(task_id):
     
     task_data, new_tags = parse_task_data_from_request()
 
-    if task.type != task_data["type"]: 
-        return jsonify({
-                    "message": "You cannot edit task type after creation.",
-                    "original type": task.type,
-                    "given type": task_data["type"]
-                }), status_codes.HTTP_403_Forbidden.value
     if task_data["status"] is None: task_data["status"] = task.status
     
     for key, value in task_data.items():

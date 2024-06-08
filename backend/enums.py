@@ -16,7 +16,3 @@ class task_status(Enum):
     IN_PROGRESS = 'IN PROGRESS'
     DONE = 'DONE'
     BLOCKED = 'BLOCKED'
-
-class task_type(Enum):
-    ASSIGNMENT = "Assignment"
-    TEST = "TEST"

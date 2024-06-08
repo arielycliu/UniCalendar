@@ -15,8 +15,8 @@ export default function Floaters({ tasks }) {
 						<tr>
 							<th>Name</th>
 							<th>Status</th>
-							<th>Type</th>
 							<th>Course code</th>
+							<th>Tags</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -24,8 +24,8 @@ export default function Floaters({ tasks }) {
 							<tr key={task.id}>
 								<td>{task.name}</td>
 								<td>{task.status}</td>
-								<td>{task.type}</td>
 								<td>{task.course_code}</td>
+								<td>{task.tag}</td>
 							</tr>
 						))}
 					</tbody>

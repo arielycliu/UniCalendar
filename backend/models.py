@@ -16,21 +16,19 @@ class Task(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(String(4096), nullable=True)
-    type: Mapped[str] = mapped_column(String(20), nullable=False)  # indicate whether assignment or test type
     grade_weight = mapped_column(Float, nullable=True)  # weight of task e.g, 5%
     grade_achieved: Mapped[float] = mapped_column(Float, nullable=True)
     course_code: Mapped[str] = mapped_column(String(50), nullable=True)
     status: Mapped[str] = mapped_column(String(20), default='TODO')  # status of task e.g, todo, doing, done, blocked
     time_start: Mapped[str] = mapped_column(String(50), nullable=True)
     time_end: Mapped[str] = mapped_column(String(50), nullable=True)  # must end after start date
-    tags = db.relationship('Tag', secondary=task_tags, back_populates='tasks')  # subtypes enable finer task categories e.g, midterm, survey
+    tags = db.relationship('Tag', secondary=task_tags, back_populates='tasks')  # tag enable finer task categories e.g, midterm, survey
 
     def to_json(self):
         return {
             "id": self.id,
             "name": self.name,
             "description": self.description,
-            "type": self.type,
             "grade_weight": self.grade_weight,
             "grade_achieved": self.grade_achieved,
             "course_code": self.course_code,
@@ -46,7 +44,6 @@ class Subtask(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[Optional[str]] = mapped_column(String(4096), nullable=True)
-    # type will be identical to type of its task parent
     status: Mapped[str] = mapped_column(String(20), default='TODO')  # status is independent of its parents
     time_start: Mapped[str] = mapped_column(String(50), nullable=True)
     time_end: Mapped[str] = mapped_column(String(50), nullable=True)

@@ -4,7 +4,6 @@ import './CreateModal.css'
 export default function CreateModal({ show, onClose }) {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
-    const [type, setType] = useState("");
     const [gradeWeight, setGradeWeight] = useState(0);
     const [gradeAchieved, setGradeAchieved] = useState(0);
     const [courseCode, setCourseCode] = useState("");
@@ -43,13 +42,6 @@ export default function CreateModal({ show, onClose }) {
                             id="description"
                             onChange={(e) => setDescription(e.target.value)}
                         />
-                    </div>
-                    <div>
-                        <label htmlFor="type">Task type:</label>
-                        <select htmlFor="type" onChange={(e) => setDescription(e.target.value)}>
-                            <option value="Assignment">Assignment</option>
-                            <option value="Test">Test</option>
-                        </select>
                     </div>
                     <br></br>
                     <br></br>
