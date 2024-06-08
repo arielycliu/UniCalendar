@@ -9,12 +9,18 @@
     align-items: center;
     justify-content: center;
 }
+
+.modal-overlay div p {
+    text-decoration: underline;
+    font-style: italic;
+    font-size: 13px;
+}
   
 .modal {
     background: white;
     padding: 20px;
     border-radius: 5px;
-    width: 40vw;
+    width: 50vw;
     height: max-content;
     margin: 0 auto;
     position: relative;
@@ -40,6 +46,8 @@
 
 .create-form div {
     margin-bottom: 15px;
+    display: flex;
+    align-items: top;
 }
 
 .create-form div label {
@@ -51,12 +59,23 @@
     border: 0px;
     border-radius: 15px;
     cursor: pointer;
+    background-color: rgb(253, 247, 178);
 }
-
 .create-form div option {
-    background-color: rgb(231, 231, 231);
     padding: 5px;
     border: 0px;
+}
+/* Use important! to move these background colors to highest css priority */
+.todo {
+    background-color: rgb(253, 247, 178) !important; 
+}
+
+.in-progress {
+    background-color: rgb(163, 231, 164) !important;
+}
+
+.done {
+    background-color: rgb(163, 211, 255) !important;
 }
   
 .create-form button {
@@ -72,3 +91,21 @@
     background-color: rgb(214, 214, 214);
     border: 0px black;
 }
+
+.horizontal-group {
+    display: flex;
+    gap: 10px;
+}
+
+.horizontal-group {
+    display: flex;
+    gap: 10px;
+}
+#grade_weight,
+#numberOfTasks {
+    width: 60px;
+}
+#description {
+    height: 40px;
+}
+
