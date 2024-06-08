@@ -50,11 +50,54 @@
 
 .calendar-day {
     text-align: center;
-    padding: 25px;
+    min-height: 85px;
     outline: 0.5px solid #7878787b;
+    position: relative;
+    z-index: 0;
 }
 
 .calendar-day.empty {
     outline: none;
 }
+
+.day-number {
+    padding: 5px 0px;
+}
   
+
+.task-spanner {
+    background-color: #8E7AB5;
+    color: #fff;
+    height: 20px;
+    font-size: 12px;
+    position: relative;
+    z-index: 1;
+}
+.task-spanner-extended {
+    background-color: #8E7AB5;
+    color: #fff;
+    height: 20px;
+    font-size: 12px;
+    position: relative;
+    z-index: 1;
+}
+
+.floating-tasks {
+    margin-top: 5%;
+}
+.floating-tasks h2 {
+    margin-bottom: 5px;
+}
+.float-task-table {
+    margin-bottom: 30%;
+    border-collapse: collapse;
+    gap: 0px;
+    width: 70vw;
+}
+
+.float-task-table thead th,
+.float-task-table tbody td {
+    text-align: left;
+    border: 1px solid black;
+    padding: 7px;
+}

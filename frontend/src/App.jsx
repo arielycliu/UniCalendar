@@ -1,9 +1,60 @@
+import { useEffect, useState } from "react";
 import Calendar from "./Calendar"
 
 function App() {
+
+	const [tasks, setTasks] = useState([]);
+	
+	useEffect(() => {
+		// addTask()
+		fetchTasks()
+	}, []);
+
+	const fetchTasks = async() => {
+		const apiResponse = await fetch("http://127.0.0.1:5000/read/list_tasks");
+		const data = await apiResponse.json();
+		setTasks(data.tasks);
+	}
+
+	const addTask = async() => {
+		const data = {
+			"name": "CS Labs",
+			"type": "Assignment",
+			"time_start": "2024-06-01T04:00:00.000Z",
+			"time_end": "2024-06-07T21:19:06.158Z",
+			"tags": ["Lab"],
+			"course_code": "CSC258"
+		}
+		const options = {
+			method: "POST",
+			headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+		}
+		const response = await fetch(`http://127.0.0.1:5000/create/task`, options)
+		if (response.status === 201) {
+			alert("Success!");
+		} else {
+			alert(response);
+		}
+	}
+
+	const deleteTask = async() => {
+		const options = {
+			method: "DELETE"
+		}
+		const response = await fetch(`http://127.0.0.1:5000/delete/task/5`, options)
+		if (response.status === 200) {
+			alert("Success!");
+		} else {
+			alert(response);
+		}
+	}
+
 	return (
 		<>
-			<Calendar />
+			<Calendar tasks={tasks}/>
 		</>
 	)
 }

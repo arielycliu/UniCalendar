@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import "./Calendar.css";
 
 
-export default function Calendar() {
+
+export default function Calendar({ tasks }) {
+
 	const today = new Date();
   	const [currentDate, setCurrentDate] = useState(today);
 
@@ -15,6 +17,19 @@ export default function Calendar() {
 		const lastDay = new Date(curdate.getFullYear(), curdate.getMonth() + 1, 0)
 		return lastDay.getDate();
 	};
+
+	const isSameDay = (date1, date2) => {
+		return (
+			date1.getFullYear() === date2.getFullYear() &&
+			date1.getMonth() === date2.getMonth() &&
+			date1.getDate() === date2.getDate()
+		);
+	};
+
+	const noDateTasks = tasks.filter((task) => {
+		return (task.time_end === null & task.time_end === null);
+	});
+	
 
 	const generateCalendar = () => {
 		const days = [];
@@ -29,10 +44,44 @@ export default function Calendar() {
 		}
 
 		for (let i = 1; i <= totalDays; i++) {
+			const namedTasks = tasks.filter((task) => { // used to figure out which tasks to display the name of
+				const taskEnd = new Date(task.time_end);
+				const taskStart = new Date(task.time_start);
+				const currentDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
+				return isSameDay(taskEnd, currentDay) || isSameDay(taskStart, currentDay);
+			});
+			
+			const barTasks = tasks.filter((task) => {
+				const taskEnd = new Date(task.time_end);
+				const taskStart = new Date(task.time_start);
+				taskStart.setHours(0, 0, 0, 0); // round to start of the day
+				taskEnd.setHours(0, 0, 0, 0); // round to end of day
+				const currentDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
+				currentDay.setHours(0, 0, 0, 0);
+				const inRange = taskStart < currentDay && currentDay < taskEnd;
+				console.log(`Checking barTasks for day ${i}: ${taskStart} vs ${currentDay} vs ${taskEnd}. Result is ${inRange}`);
+				return inRange;
+			});
+		
 			days.push(
-			<div className="calendar-day" key={`day-${i}`}>
-				{i}
-			</div>
+				<div className="calendar-day" key={`day-${i}`}>
+					<div className="day-number">{i}</div>
+					<div className="day-tasks">
+						{
+							namedTasks.map((task) => (
+								<div key={task.id} className="task-spanner">
+									{task.name}
+								</div>
+							))
+						}
+						{
+							barTasks.map((task) => (
+								<div key={task.id} className="task-spanner-extended">
+								</div>
+							))
+						}
+					</div>
+				</div>
 			);
 		}
 
@@ -51,29 +100,55 @@ export default function Calendar() {
 		setCurrentDate(date);
 	};
 
-	return (			
-		<div className="calendar">
-			<div className="calendar-header-div">
-				<button onClick={prevMonth} id="prevmonth">
-					<img src="images/arr.png" alt="arrow" />
-				</button>
-				<h2>
-					{currentDate.toLocaleString('default', { month: 'short' })} {currentDate.getFullYear()}
-				</h2>
-				<button onClick={nextMonth} id="nextmonth">
-					<img src="images/arr.png" alt="arrow" />
-				</button>
+	return (	
+		<>	
+			<div className="calendar">
+				<div className="calendar-header-div">
+					<button onClick={prevMonth} id="prevmonth">
+						<img src="images/arr.png" alt="arrow" />
+					</button>
+					<h2>
+						{currentDate.toLocaleString('default', { month: 'short' })} {currentDate.getFullYear()}
+					</h2>
+					<button onClick={nextMonth} id="nextmonth">
+						<img src="images/arr.png" alt="arrow" />
+					</button>
+				</div>
+				<div className="calendar-grid">
+					<div className="calendar-day-name">Sun</div>
+					<div className="calendar-day-name">Mon</div>
+					<div className="calendar-day-name">Tue</div>
+					<div className="calendar-day-name">Wed</div>
+					<div className="calendar-day-name">Thu</div>
+					<div className="calendar-day-name">Fri</div>
+					<div className="calendar-day-name">Sat</div>
+					{generateCalendar()}
+				</div>
 			</div>
-			<div className="calendar-grid">
-				<div className="calendar-day-name">Sun</div>
-				<div className="calendar-day-name">Mon</div>
-				<div className="calendar-day-name">Tue</div>
-				<div className="calendar-day-name">Wed</div>
-				<div className="calendar-day-name">Thu</div>
-				<div className="calendar-day-name">Fri</div>
-				<div className="calendar-day-name">Sat</div>
-				{generateCalendar()}
+			<div className="floating-tasks">
+				<h2>Floating Tasks</h2>
+				<p>Tasks with no start or end date go here</p>
+				<table className="float-task-table">
+					<thead>
+						<tr>
+							<th>name</th>
+							<th>status</th>
+							<th>type</th>
+							<th>course code</th>
+						</tr>
+					</thead>
+					<tbody>
+						{noDateTasks.map((task) => (
+							<tr key={task.id}>
+								<td>{task.name}</td>
+								<td>{task.status}</td>
+								<td>{task.type}</td>
+								<td>{task.course_code}</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
 			</div>
-		</div>
+		</>	
   	);
 }
