@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Calendar.css";
-
+import Day from "./Day"
 
 
 export default function Calendar({ tasks }) {
@@ -59,24 +59,7 @@ export default function Calendar({ tasks }) {
 			});
 		
 			days.push(
-				<div className="calendar-day" key={`day-${i}`}>
-					<div className="day-number">{i}</div>
-					<div className="day-tasks">
-						{
-							namedTasks.map((task) => (
-								<div key={task.id} className="task-spanner">
-									{task.name}
-								</div>
-							))
-						}
-						{
-							barTasks.map((task) => (
-								<div key={task.id} className="task-spanner-extended">
-								</div>
-							))
-						}
-					</div>
-				</div>
+				<Day namedTasks={namedTasks} barTasks={barTasks} i={i} />
 			);
 		}
 
