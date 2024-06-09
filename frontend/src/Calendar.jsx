@@ -37,17 +37,14 @@ export default function Calendar({ tasks, handleOpenCreateModal, handleOpenUpdat
 			days.push(<div className="calendar-day empty" key={`empty-${i}`}></div>);
 		}
 
-		console.log(tasks);
-
 		for (let i = 1; i <= totalDays; i++) {
-			const day = new Day(currentDate.getFullYear, currentDate.getMonth, i);
 			const namedTasks = tasks.filter((task) => { // used to figure out which tasks to display the name of
 				const taskEnd = new Date(task.time_end);
 				const taskStart = new Date(task.time_start);
 				const currentDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
 				return isSameDay(taskEnd, currentDay) || isSameDay(taskStart, currentDay);
 			});
-			console.log(namedTasks);
+			
 			const barTasks = tasks.filter((task) => {
 				const taskEnd = new Date(task.time_end);
 				const taskStart = new Date(task.time_start);
@@ -60,14 +57,7 @@ export default function Calendar({ tasks, handleOpenCreateModal, handleOpenUpdat
 			});
 		
 			days.push(
-				<Day 
-					namedTasks={namedTasks} 
-					barTasks={barTasks} 
-					i={i}
-					day={day}  
-					handleOpenCreateModal={handleOpenCreateModal} 
-					handleOpenUpdateModal={handleOpenUpdateModal} 
-				/>
+				<Day key={`day-${i}`} namedTasks={namedTasks} barTasks={barTasks} i={i}  handleOpenCreateModal={handleOpenCreateModal} handleOpenUpdateModal={handleOpenUpdateModal} />
 			);
 		}
 

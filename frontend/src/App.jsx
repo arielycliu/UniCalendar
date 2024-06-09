@@ -3,7 +3,7 @@ import Calendar from "./Calendar"
 import Floaters from "./Floaters";
 import Colors from "./Colors";
 import CreateModal from './CreateModal';
-import UpdateModal from './UpdateModal';
+import UpdateModal from './UpdateModal'
 
 const colors = {
 	"CSC207": "#8E7AB5",
@@ -13,22 +13,17 @@ const colors = {
 }
 
 function App() {
-	const [dateSelected, setDateSelected] = useState("");
+
 	const [tasks, setTasks] = useState([]);
 	
 	useEffect(() => {
 		// addTask()
-		alert("dsfsd");
 		fetchTasks();
 	}, []);
 
 	const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-	const handleOpenCreateModal = (day) => {
-		setIsCreateModalOpen(true);
-		setDateSelected(day);
-		alert(day);
-	}
+	const handleOpenCreateModal = () => setIsCreateModalOpen(true);
 	const handleCloseCreateModal = () => setIsCreateModalOpen(false);
 
 	const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
@@ -47,7 +42,6 @@ function App() {
 		const apiResponse = await fetch("http://127.0.0.1:5000/read/list_tasks");
 		const data = await apiResponse.json();
 		setTasks(data.tasks);
-		console.log("dskfljlfkjsdlkjsdlkdjflk");
 	}
 
 	const onCreateModalClose = () => {
@@ -97,14 +91,10 @@ function App() {
 
 	return (
 		<>
-			<Calendar 
-				tasks={tasks} 
-				handleOpenCreateModal={handleOpenCreateModal} 
-				handleOpenUpdateModal={handleOpenUpdateModal}
-			/>
+			<Calendar tasks={tasks} handleOpenCreateModal={handleOpenCreateModal} handleOpenUpdateModal={handleOpenUpdateModal}/>
 			<Floaters tasks={tasks}/>
 			<Colors colors={colors}/>
-			<CreateModal show={isCreateModalOpen} onCreateModalClose={onCreateModalClose} dateSelected={dateSelected} />
+			<CreateModal show={isCreateModalOpen} onCreateModalClose={onCreateModalClose} />
 			<UpdateModal show={isUpdateModalOpen} updateModalTask={updateModalTask} onUpdateModalClose={onUpdateModalClose} />
 		</>
 	)

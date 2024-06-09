@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import './Modal.css'
 import Tags from './Tags';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
-export default function CreateModal({ show, onCreateModalClose, dateSelected }) {
+
+export default function CreateModal({ show, onCreateModalClose }) {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [gradeWeight, setGradeWeight] = useState(0);
@@ -115,17 +115,17 @@ export default function CreateModal({ show, onCreateModalClose, dateSelected }) 
                     </div>
                     <div>
                         <label htmlFor="time_start">Task start time:</label>
-                        <DateTimePicker
-                            label="time start picker"
-                            value={dateSelected}
-                            onChange={(e) => setTimeEnd(e.target.value)}
+                        <input
+                            type="datetime-local"
+                            id="time_start"
+                            onChange={(e) => setTimeStart(e.target.value)}
                         />
                     </div>
                     <div>
                         <label htmlFor="time_end">Task deadline:</label>
-                        <DateTimePicker
-                            label="time end picker"
-                            value={dateSelected}
+                        <input
+                            type="datetime-local"
+                            id="time_end"
                             onChange={(e) => setTimeEnd(e.target.value)}
                         />
                     </div>
