@@ -44,16 +44,19 @@
     border-radius: 100%;
 }
 
+.update-form div,
 .create-form div {
     margin-bottom: 15px;
-    display: flex;
+    display: flex; 
     align-items: top;
 }
 
+.update-form div label,
 .create-form div label {
     margin-right: 10px;
 }
 
+.update-form div select,
 .create-form div select {
     padding: 10px 20px;
     border: 0px;
@@ -61,6 +64,8 @@
     cursor: pointer;
     background-color: rgb(253, 247, 178);
 }
+
+.create-form div option,
 .create-form div option {
     padding: 5px;
     border: 0px;
@@ -78,6 +83,7 @@
     background-color: rgb(163, 211, 255) !important;
 }
   
+.update-form button,
 .create-form button {
     position: absolute;
     bottom: 30px;
@@ -87,22 +93,13 @@
     border: 0px black;
     margin-top: 50px;
 }
+.update-form button:hover,
 .create-form button:hover {
     background-color: rgb(214, 214, 214);
     border: 0px black;
 }
 
-.horizontal-group {
-    display: flex;
-    gap: 10px;
-}
-
-.horizontal-group {
-    display: flex;
-    gap: 10px;
-}
-#grade_weight,
-#numberOfTasks {
+#grade_weight {
     width: 60px;
 }
 #description {

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./Calendar.css";
 import Day from "./Day"
 
-export default function Calendar({ tasks, handleOpenModal }) {
+export default function Calendar({ tasks, handleOpenCreateModal, handleOpenUpdateModal }) {
 
 	const today = new Date();
   	const [currentDate, setCurrentDate] = useState(today);
@@ -57,7 +57,7 @@ export default function Calendar({ tasks, handleOpenModal }) {
 			});
 		
 			days.push(
-				<Day key={`day-${i}`}namedTasks={namedTasks} barTasks={barTasks} i={i}  handleOpenModal={handleOpenModal} />
+				<Day key={`day-${i}`} namedTasks={namedTasks} barTasks={barTasks} i={i}  handleOpenCreateModal={handleOpenCreateModal} handleOpenUpdateModal={handleOpenUpdateModal} />
 			);
 		}
 
