@@ -59,7 +59,7 @@ export default function UpdateModal({ show, updateModalTask = {}, onUpdateModalC
             "status": status,
             "time_start": hasTime ? timeStart : null,
             "time_end": hasTime ? timeEnd : null,
-            "tags": tags
+            "tags": tags.map(tags => tags.value)
         };
         const options = {
             method: "PATCH",
