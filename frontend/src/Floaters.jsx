@@ -1,6 +1,6 @@
 import "./Floaters.css";
 
-export default function Floaters({ tasks }) {
+export default function Floaters({ tasks, handleOpenUpdateModal }) {
     const noDateTasks = tasks.filter((task) => {
 		return (task.time_end === null && task.time_end === null) || (task.time_end === "" && task.time_end === "");
 	});
@@ -34,7 +34,7 @@ export default function Floaters({ tasks }) {
 					</thead>
 					<tbody>
 						{noDateTasks.map((task) => (
-							<tr key={`floating-${task.id}`}>
+							<tr key={`floating-${task.id}`} onClick={() => handleOpenUpdateModal(task)}>
 								<td>{task.name}</td>
 								<td>
 									<div className={getStatusStyle(task.status)}>
