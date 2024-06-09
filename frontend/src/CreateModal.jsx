@@ -1,18 +1,27 @@
 import { useState } from 'react';
 import './Modal.css'
 import Tags from './Tags';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 
 
-export default function CreateModal({ show, onCreateModalClose }) {
+export default function CreateModal({ show, onCreateModalClose, selectedDay }) {
+    if (!show) {
+        return null;
+    }
+
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [gradeWeight, setGradeWeight] = useState(0);
     const [gradeAchieved, setGradeAchieved] = useState(0);
     const [courseCode, setCourseCode] = useState("");
     const [status, setStatus] = useState("");
-    const [timeStart, setTimeStart] = useState("");
-    const [timeEnd, setTimeEnd] = useState("");
+    const [timeStart, setTimeStart] = useState(dayjs(selectedDay));
+    const [timeEnd, setTimeEnd] = useState(dayjs(selectedDay));
     const [tags, setTags] = useState([]);
+    const [hasTime, setHasTime] = useState(false);
 
     const getStatusStyle = () => {
         switch (status) {
@@ -36,10 +45,10 @@ export default function CreateModal({ show, onCreateModalClose }) {
             "grade_achieved": gradeAchieved,
             "course_code": courseCode,
             "status": status,
-            "time_start": timeStart,
-            "time_end": timeEnd,
+            "time_start": hasTime ? timeStart : null,
+            "time_end": hasTime ? timeEnd : null,
             "tags": tags
-        }
+        };
         const options = {
             method: "POST",
             headers: {
@@ -49,13 +58,21 @@ export default function CreateModal({ show, onCreateModalClose }) {
         }
         const response = await fetch(`http://127.0.0.1:5000/create/task`, options)
         const response_data = await response.json()
-        alert(response_data.message);
+        // Add error checking if 404 or 500 etc
         onCreateModalClose();
     }
 
-    if (!show) {
-        return null;
-    }
+    const handleCheckboxChange = (e) => {
+        const checked = e.target.checked;
+        setHasTime(checked);
+        if (!checked) {
+            setTimeStart(null);
+            setTimeEnd(null);
+        } else {
+            setTimeStart(dayjs(selectedDay));
+            setTimeEnd(dayjs(selectedDay));
+        }
+    };
     
     return (
         <div className="modal-overlay" onClick={onCreateModalClose}>
@@ -114,28 +131,42 @@ export default function CreateModal({ show, onCreateModalClose }) {
                         </select>
                     </div>
                     <div>
-                        <label htmlFor="time_start">Task start time:</label>
+                        <label htmlFor="has_time">Add start/end times:</label>
                         <input
-                            type="datetime-local"
-                            id="time_start"
-                            onChange={(e) => setTimeStart(e.target.value)}
+                            type="checkbox"
+                            id="has_time"
+                            onChange={handleCheckboxChange}
                         />
                     </div>
-                    <div>
-                        <label htmlFor="time_end">Task deadline:</label>
-                        <input
-                            type="datetime-local"
-                            id="time_end"
-                            onChange={(e) => setTimeEnd(e.target.value)}
-                        />
-                    </div>
+                    {hasTime && (
+                        <>
+                            <div>
+                                <label htmlFor="time_start">Task start time:</label>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DateTimePicker
+                                        value={timeStart}
+                                        onChange={(newTime) => setTimeStart(newTime)}
+                                    />
+                                </LocalizationProvider>
+                            </div>
+                            <div>
+                                <label htmlFor="time_end">Task deadline:</label>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DateTimePicker
+                                        value={timeEnd}
+                                        onChange={(newTime) => setTimeEnd(newTime)}
+                                    />
+                                </LocalizationProvider>
+                            </div>
+                        </>
+                    )}
                     <div>
                         <label htmlFor="tags">Tags:</label>
                         <Tags tags={tags} setTags={setTags} />
                     </div>
                     <br></br>
                     <br></br>
-                    <button type="submit">Create</button>
+                    <button className="create-btn" type="submit">Create</button>
                 </form>
             </div>
             </div>

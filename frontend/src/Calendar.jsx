@@ -38,10 +38,11 @@ export default function Calendar({ tasks, handleOpenCreateModal, handleOpenUpdat
 		}
 
 		for (let i = 1; i <= totalDays; i++) {
+			const currentDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
+
 			const namedTasks = tasks.filter((task) => { // used to figure out which tasks to display the name of
 				const taskEnd = new Date(task.time_end);
 				const taskStart = new Date(task.time_start);
-				const currentDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
 				return isSameDay(taskEnd, currentDay) || isSameDay(taskStart, currentDay);
 			});
 			
@@ -50,14 +51,20 @@ export default function Calendar({ tasks, handleOpenCreateModal, handleOpenUpdat
 				const taskStart = new Date(task.time_start);
 				taskStart.setHours(0, 0, 0, 0); // round to start of the day
 				taskEnd.setHours(0, 0, 0, 0); // round to end of day
-				const currentDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
 				currentDay.setHours(0, 0, 0, 0);
 				const inRange = taskStart < currentDay && currentDay < taskEnd;
 				return inRange;
 			});
 		
 			days.push(
-				<Day key={`day-${i}`} namedTasks={namedTasks} barTasks={barTasks} i={i}  handleOpenCreateModal={handleOpenCreateModal} handleOpenUpdateModal={handleOpenUpdateModal} />
+				<Day
+					namedTasks={namedTasks} 
+					barTasks={barTasks} 
+					i={i}  
+					handleOpenCreateModal={handleOpenCreateModal} 
+					handleOpenUpdateModal={handleOpenUpdateModal} 
+					currentDay={currentDay}
+				/>
 			);
 		}
 

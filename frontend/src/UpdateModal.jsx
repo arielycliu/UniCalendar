@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import Tags from './Tags';
 import './Modal.css';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 
 export default function UpdateModal({ show, updateModalTask = {}, onUpdateModalClose }) {
     const [name, setName] = useState(updateModalTask.name || "");;
@@ -9,11 +13,10 @@ export default function UpdateModal({ show, updateModalTask = {}, onUpdateModalC
     const [gradeAchieved, setGradeAchieved] = useState(updateModalTask.gradeAchieved || 0);
     const [courseCode, setCourseCode] = useState(updateModalTask.courseCode || "");
     const [status, setStatus] = useState(updateModalTask.status || "");
-    const [timeStart, setTimeStart] = useState(updateModalTask.timeStart || "");
-    const [timeEnd, setTimeEnd] = useState(updateModalTask.timeEnd || "");
+    const [timeStart, setTimeStart] = useState(dayjs(updateModalTask.timeStart) || "");
+    const [timeEnd, setTimeEnd] = useState(dayjs(updateModalTask.timeEnd) || "");
     const [tags, setTags] = useState(updateModalTask.tags || []);
-    let transformedDateStart = '';
-    let transformedDateEnd = '';
+    const [hasTime, setHasTime] = useState(true);
 
     useEffect(() => {
         if (show) {
@@ -23,18 +26,12 @@ export default function UpdateModal({ show, updateModalTask = {}, onUpdateModalC
             setGradeAchieved(updateModalTask.gradeAchieved || 0);
             setCourseCode(updateModalTask.courseCode || '');
             setStatus(updateModalTask.status || '');
-            setTimeStart(updateModalTask.timeStart || '');
-            setTimeEnd(updateModalTask.timeEnd || '');
             setTags(updateModalTask.tags || []);
-            if (updateModalTask.timeStart && !isNaN(new Date(updateModalTask.timeStart))) {
-                transformedDateStart = new Date(updateModalTask.timeStart).toISOString().slice(0, 16);
+            if (!updateModalTask.timeStart && !updateModalTask.timeEnd){
+                setHasTime(false);
+            } else {
+                setHasTime(true);
             }
-            if (updateModalTask.timeEnd && !isNaN(new Date(updateModalTask.timeEnd))) {
-                transformedDateEnd = new Date(updateModalTask.timeEnd).toISOString().slice(0, 16);
-            }
-    
-            setTimeStart(transformedDateStart);
-            setTimeEnd(transformedDateEnd);
         }
     }, [updateModalTask]);
 
@@ -60,10 +57,10 @@ export default function UpdateModal({ show, updateModalTask = {}, onUpdateModalC
             "grade_achieved": gradeAchieved,
             "course_code": courseCode,
             "status": status,
-            "time_start": timeStart,
-            "time_end": timeEnd,
-            "tags": tags.map(tag => tag.tag_value)
-        }
+            "time_start": hasTime ? timeStart : null,
+            "time_end": hasTime ? timeEnd : null,
+            "tags": tags
+        };
         const options = {
             method: "PATCH",
             headers: {
@@ -71,10 +68,9 @@ export default function UpdateModal({ show, updateModalTask = {}, onUpdateModalC
             },
             body: JSON.stringify(data)
         }
-        alert(updateModalTask.id);
         const response = await fetch(`http://127.0.0.1:5000/update/task/${updateModalTask.id}`, options)
         const response_data = await response.json()
-        alert(response_data);
+        alert(response_data.message);
         onUpdateModalClose();
     }
 
@@ -83,6 +79,18 @@ export default function UpdateModal({ show, updateModalTask = {}, onUpdateModalC
     }
 
     const transformedTags = tags.map(tag => tag.tag_value);
+
+    const handleCheckboxChange = (e) => {
+        const checked = e.target.checked;
+        setHasTime(checked);
+        if (!checked) {
+            setTimeStart(null);
+            setTimeEnd(null);
+        } else {
+            setTimeStart(dayjs(updateModalTask.timeStart));
+            setTimeEnd(dayjs(updateModalTask.timeEnd));
+        }
+    };
 
     return (
         <div className="modal-overlay" onClick={onUpdateModalClose}>
@@ -155,30 +163,43 @@ export default function UpdateModal({ show, updateModalTask = {}, onUpdateModalC
                         </select>
                     </div>
                     <div>
-                        <label htmlFor="time_start">Task start time:</label>
+                        <label htmlFor="has_time">Add start/end times:</label>
                         <input
-                            type="datetime-local"
-                            id="time_start"
-                            value={timeStart}
-                            onChange={(e) => setTimeStart(e.target.value)}
+                            type="checkbox"
+                            id="has_time"
+                            onChange={handleCheckboxChange}
+                            defaultChecked={hasTime}
                         />
                     </div>
-                    <div>
-                        <label htmlFor="time_end">Task deadline:</label>
-                        <input
-                            type="datetime-local"
-                            id="time_end"
-                            value={timeEnd}
-                            onChange={(e) => setTimeEnd(e.target.value)}
-                        />
-                    </div>
+                    {hasTime && (
+                        <>
+                            <div>
+                                <label htmlFor="time_start">Task start time:</label>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DateTimePicker
+                                        value={timeStart}
+                                        onChange={(newTime) => setTimeStart(newTime)}
+                                    />
+                                </LocalizationProvider>
+                            </div>
+                            <div>
+                                <label htmlFor="time_end">Task deadline:</label>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DateTimePicker
+                                        value={timeEnd}
+                                        onChange={(newTime) => setTimeEnd(newTime)}
+                                    />
+                                </LocalizationProvider>
+                            </div>
+                        </>
+                    )}
                     <div>
                         <label htmlFor="tags">Tags:</label>
                         <Tags tags={transformedTags} setTags={(newTags) => setTags(newTags.map(tag_value => ({ id: tags.length + 1, tag_value })))} />
                     </div>
                     <br></br>
                     <br></br>
-                    <button type="submit">Update</button>
+                    <button className="update-btn" type="submit">Update</button>
                 </form>
             </div>
             </div>

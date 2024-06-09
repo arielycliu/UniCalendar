@@ -83,8 +83,8 @@
     background-color: rgb(163, 211, 255) !important;
 }
   
-.update-form button,
-.create-form button {
+.update-btn,
+.create-btn {
     position: absolute;
     bottom: 30px;
     right: 30px;

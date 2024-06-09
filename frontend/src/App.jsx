@@ -13,7 +13,7 @@ const colors = {
 }
 
 function App() {
-
+	const [selectedDay, setSelectedDay] = useState("");
 	const [tasks, setTasks] = useState([]);
 	
 	useEffect(() => {
@@ -23,7 +23,10 @@ function App() {
 
 	const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-	const handleOpenCreateModal = () => setIsCreateModalOpen(true);
+	const handleOpenCreateModal = (day) => {
+		setIsCreateModalOpen(true);
+		setSelectedDay(day);
+	}
 	const handleCloseCreateModal = () => setIsCreateModalOpen(false);
 
 	const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
@@ -94,7 +97,7 @@ function App() {
 			<Calendar tasks={tasks} handleOpenCreateModal={handleOpenCreateModal} handleOpenUpdateModal={handleOpenUpdateModal}/>
 			<Floaters tasks={tasks}/>
 			<Colors colors={colors}/>
-			<CreateModal show={isCreateModalOpen} onCreateModalClose={onCreateModalClose} />
+			<CreateModal show={isCreateModalOpen} onCreateModalClose={onCreateModalClose} selectedDay={selectedDay} />
 			<UpdateModal show={isUpdateModalOpen} updateModalTask={updateModalTask} onUpdateModalClose={onUpdateModalClose} />
 		</>
 	)
