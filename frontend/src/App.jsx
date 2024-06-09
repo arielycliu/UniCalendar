@@ -3,6 +3,7 @@ import Calendar from "./Calendar"
 import Floaters from "./Floaters";
 import Colors from "./Colors";
 import CreateModal from './CreateModal';
+import UpdateModal from './UpdateModal'
 
 const colors = {
 	"CSC207": "#8E7AB5",
@@ -12,7 +13,7 @@ const colors = {
 }
 
 function App() {
-
+	const [selectedDay, setSelectedDay] = useState("");
 	const [tasks, setTasks] = useState([]);
 	
 	useEffect(() => {
@@ -20,10 +21,25 @@ function App() {
 		fetchTasks();
 	}, []);
 
-	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-	const handleOpenModal = () => setIsModalOpen(true);
-	const handleCloseModal = () => setIsModalOpen(false);
+	const handleOpenCreateModal = (day) => {
+		setIsCreateModalOpen(true);
+		setSelectedDay(day);
+	}
+	const handleCloseCreateModal = () => setIsCreateModalOpen(false);
+
+	const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+	const [updateModalTask, setUpdateModalTask] = useState({});
+
+	const handleOpenUpdateModal = (taskData) => {
+		setIsUpdateModalOpen(true);
+		setUpdateModalTask(taskData);
+	}
+	const handleCloseUpdateModal = () => {
+		setUpdateModalTask(0);
+		setIsUpdateModalOpen(false);
+	}
 
 	const fetchTasks = async() => {
 		const apiResponse = await fetch("http://127.0.0.1:5000/read/list_tasks");
@@ -31,8 +47,13 @@ function App() {
 		setTasks(data.tasks);
 	}
 
-	const onModalClose = () => {
-		handleCloseModal();
+	const onCreateModalClose = () => {
+		handleCloseCreateModal();
+		fetchTasks();
+	}
+
+	const onUpdateModalClose = () => {
+		handleCloseUpdateModal();
 		fetchTasks();
 	}
 
@@ -73,10 +94,11 @@ function App() {
 
 	return (
 		<>
-			<Calendar tasks={tasks} handleOpenModal={handleOpenModal} />
+			<Calendar tasks={tasks} handleOpenCreateModal={handleOpenCreateModal} handleOpenUpdateModal={handleOpenUpdateModal}/>
 			<Floaters tasks={tasks}/>
 			<Colors colors={colors}/>
-			<CreateModal show={isModalOpen} onModalClose={onModalClose} />
+			<CreateModal show={isCreateModalOpen} onCreateModalClose={onCreateModalClose} selectedDay={selectedDay} />
+			<UpdateModal show={isUpdateModalOpen} updateModalTask={updateModalTask} onUpdateModalClose={onUpdateModalClose} />
 		</>
 	)
 }

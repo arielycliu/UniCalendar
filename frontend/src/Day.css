@@ -40,6 +40,10 @@
     position: relative;
     z-index: 1;
 }
+.task-spanner:hover,
+.task-spanner-extended:hover {
+    cursor: pointer;
+}
 
 .create-task {
     width: 100%;

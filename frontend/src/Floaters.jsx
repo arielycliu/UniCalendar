@@ -9,7 +9,7 @@ export default function Floaters({ tasks }) {
         switch (status) {
             case 'TODO':
                 return 'todo';
-            case 'IN_PROGRESS':
+            case 'IN PROGRESS':
                 return 'in-progress';
             case 'DONE':
                 return 'done';
@@ -43,7 +43,7 @@ export default function Floaters({ tasks }) {
 								</td>
 								<td>{task.course_code}</td>
 								<td>
-									<div class="float-tags">
+									<div className="float-tags">
 									{
 										task.tags.map((tag, index) => (
 											<li key={index} className="float-tag">{tag.tag_value}</li>
