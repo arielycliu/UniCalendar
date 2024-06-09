@@ -48,7 +48,12 @@
 .create-task {
     width: 100%;
     cursor: pointer;
-    color: rgb(111, 111, 111);
+    color: #e4dfef;
     font-weight: 500;
-    padding: 10px 0px;
+    font-size: 12px;
+    height: 20px;
+    background-color: #e4dfef;
+}
+.create-task:hover {
+    cursor: pointer;
 }

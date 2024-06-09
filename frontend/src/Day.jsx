@@ -30,7 +30,7 @@ export default function Day ({ namedTasks, barTasks, i, handleOpenCreateModal, h
 							))
 						}
 					</div>
-					{isHovered && <div onClick={() => handleOpenCreateModal(currentDay)} className="create-task">Create task</div>}
+					{isHovered && <div onClick={() => handleOpenCreateModal(currentDay)} className="create-task"></div>}
             </div>
         </>
     );
