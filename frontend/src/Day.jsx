@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './Day.css'
 
-export default function Day ({ namedTasks, barTasks, i, handleOpenCreateModal, handleOpenUpdateModal }) {
+export default function Day ({ namedTasks, barTasks, i, day, handleOpenCreateModal, handleOpenUpdateModal }) {
     const [isHovered, setIsHovered] = useState(false);
 
     const handleMouseEnter = () => setIsHovered(true);
@@ -30,7 +30,7 @@ export default function Day ({ namedTasks, barTasks, i, handleOpenCreateModal, h
 							))
 						}
 					</div>
-					{isHovered && <div onClick={handleOpenCreateModal} className="create-task">Create task</div>}
+					{isHovered && <div onClick={() => handleOpenCreateModal(day)} className="create-task">Create task</div>}
             </div>
         </>
     );
