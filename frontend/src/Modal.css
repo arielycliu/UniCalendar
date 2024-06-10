@@ -82,7 +82,7 @@
 .done {
     background-color: rgb(163, 211, 255) !important;
 }
-  
+
 .update-btn,
 .create-btn {
     position: absolute;
@@ -93,11 +93,26 @@
     border: 0px black;
     margin-top: 50px;
 }
-.update-form button:hover,
-.create-form button:hover {
+.delete-btn {
+    position: absolute;
+    bottom: 30px;
+    right: 140px;
+    border-radius: 50px;
+    background-color: rgb(255, 166, 166);
+    border: 0px black;
+    margin-top: 50px;
+}
+
+.update-btn:hover,
+.create-btn:hover {
     background-color: rgb(214, 214, 214);
     border: 0px black;
 }
+.delete-btn:hover {
+    background-color: rgb(255, 144, 144);
+    border: 0px black;
+}
+
 
 #grade_weight {
     width: 60px;

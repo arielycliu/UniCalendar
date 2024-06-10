@@ -95,7 +95,7 @@ function App() {
 	return (
 		<>
 			<Calendar tasks={tasks} handleOpenCreateModal={handleOpenCreateModal} handleOpenUpdateModal={handleOpenUpdateModal}/>
-			<Floaters tasks={tasks} handleOpenUpdateModal={handleOpenUpdateModal} />
+			<Floaters tasks={tasks} setTasks={setTasks} handleOpenUpdateModal={handleOpenUpdateModal} />
 			<Colors colors={colors}/>
 			<CreateModal show={isCreateModalOpen} onCreateModalClose={onCreateModalClose} selectedDay={selectedDay} />
 			<UpdateModal show={isUpdateModalOpen} updateModalTask={updateModalTask} onUpdateModalClose={onUpdateModalClose} />
