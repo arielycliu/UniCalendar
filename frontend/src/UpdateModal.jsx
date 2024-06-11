@@ -70,7 +70,19 @@ export default function UpdateModal({ show, updateModalTask = {}, onUpdateModalC
         }
         const response = await fetch(`http://127.0.0.1:5000/update/task/${updateModalTask.id}`, options)
         const response_data = await response.json()
-        alert(response_data.message);
+        onUpdateModalClose();
+    }
+
+    const deleteTask = async(e) => {
+        e.preventDefault()
+        const options = {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }
+        const response = await fetch(`http://127.0.0.1:5000/delete/task/${updateModalTask.id}`, options)
+        const response_data = await response.json()
         onUpdateModalClose();
     }
 
@@ -199,6 +211,7 @@ export default function UpdateModal({ show, updateModalTask = {}, onUpdateModalC
                     </div>
                     <br></br>
                     <br></br>
+                    <button className="delete-btn" onClick={deleteTask}>Delete</button>
                     <button className="update-btn" type="submit">Update</button>
                 </form>
             </div>

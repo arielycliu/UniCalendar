@@ -1,6 +1,7 @@
+import { useEffect } from "react";
 import "./Floaters.css";
 
-export default function Floaters({ tasks, handleOpenUpdateModal }) {
+export default function Floaters({ tasks, setTasks, handleOpenUpdateModal }) {
     const noDateTasks = tasks.filter((task) => {
 		return (task.time_end === null && task.time_end === null) || (task.time_end === "" && task.time_end === "");
 	});
